@@ -1,0 +1,53 @@
+body {
+    margin: 0;
+    padding: 0;
+}
+
+.board-container {
+    display: flex;
+    justify-content: center;
+}
+
+.board {
+    border-collapse: collapse;
+}
+
+.board-col {
+    background-color: #1D63F4;
+    padding: 0.4rem;
+    border: 1px solid #1D63F4;
+}
+
+.slot {
+    height: 3.5rem;
+    width: 3.5rem;
+    border-radius: 50%;
+    background-color: white;
+}
+
+.empty-col {
+    padding: 0.4rem;
+}
+
+.empty-slot {
+    height: 3.5rem;
+    width: 3.5rem;
+    border-radius: 50%;
+    background-color: white;
+}
+
+.top {
+    padding-top: 1rem;
+}
+
+.left {
+    padding-left: 1rem;
+}
+
+.right {
+    padding-right: 1rem;
+}
+
+.bottom {
+    padding-bottom: 1rem;
+}
