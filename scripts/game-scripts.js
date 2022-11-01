@@ -1,4 +1,12 @@
+let matrix; // matrix representing game board
+
 function generateBoard(n, m) {
+    matrix = new Array(n);
+    for (let i = 0; i < n; i++) {
+        matrix[i] = new Array(m);
+        matrix[i].fill(0);
+    }
+
     let table = document.getElementById("board");
     let firstRow = document.createElement("tr");
     for (let i = 0; i < m; i++) {
@@ -41,4 +49,64 @@ function generateBoard(n, m) {
         }
         table.appendChild(boardRow);
     }
+}
+
+function flipMatrix() {
+    for (let j = 0; j < matrix[0].length; j++) {
+        for (let i = 0; i < matrix.length / 2; i++) {
+            let temp = matrix[i][j];
+            matrix[i][j] = matrix[matrix.length - 1 - i][j];
+            matrix[matrix.length - 1 - i][j] = temp;
+        }
+    }
+    for (let j = 0; j < matrix[0].length; j++) {
+        for (let i = matrix.length - 1; i > 0; i--) {
+            if (matrix[i][j] == 0 && matrix[i-1][j] != 0) {
+                let index = i;
+                while (index < matrix.length && matrix[index][j] == 0 && matrix[index-1][j] != 0) {
+                    matrix[index][j] = matrix[index-1][j];
+                    matrix[index-1][j] = 0;
+                    index++;
+                }
+            }
+        }
+    }
+}
+
+function reprintBoard() {
+    let slots = document.querySelectorAll(".slot");
+    for (let i = 0; i < matrix.length; i++) {
+        for (let j = 0; j < matrix[i].length; j++) {
+            if (matrix[i][j] == 1) {
+                slots[(i*matrix[i].length)+j].classList.add("yellow");
+                slots[(i*matrix[i].length)+j].classList.remove("red");
+            }
+            if (matrix[i][j] == 2) {
+                slots[(i*matrix[i].length)+j].classList.add("red");
+                slots[(i*matrix[i].length)+j].classList.remove("yellow");
+            }
+        }
+    }
+}
+
+function testBoard() {
+    generateBoard(6,7);
+    for (let i = 0; i < matrix.length; i++) {
+        for (let j = 0; j < matrix[i].length; j++) {
+            matrix[i][j] = Math.floor(Math.random() * 3);
+        }
+    }
+    for (let j = 0; j < matrix[0].length; j++) {
+        for (let i = matrix.length - 1; i > 0; i--) {
+            if (matrix[i][j] == 0 && matrix[i-1][j] != 0) {
+                let index = i;
+                while (index < matrix.length && matrix[index][j] == 0 && matrix[index-1][j] != 0) {
+                    matrix[index][j] = matrix[index-1][j];
+                    matrix[index-1][j] = 0;
+                    index++;
+                }
+            }
+        }
+    }
+    reprintBoard();
 }

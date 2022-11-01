@@ -36,7 +36,7 @@
     </div>
     <div class="outer-container">
         <div class="form-container">
-            <form action="#">
+            <form method="post" action="server/processLogin.php">
                 <div class="row centerrow">
                     <h1><span class="title1">Connect</span><span class="title2">4</span></h1>
                 </div>
@@ -54,9 +54,9 @@
                 <div class="row centerrow">
                     <fieldset class="boardsize">
                         <legend>Board Size</legend>
-                        <input type="radio" name="boardsize" id="normal" class="radio" checked>
+                        <input type="radio" name="boardsize" id="normal" class="radio" value="normal" checked>
                         <label for="normal">6 x 7</label>
-                        <input type="radio" name="boardsize" id="large" class="radio">
+                        <input type="radio" name="boardsize" id="large" class="radio" value="large">
                         <label for="large">8 x 9</label>
                     </fieldset>
                 </div>
@@ -79,7 +79,7 @@
                     <input type="range" name="powers" id="powers" min="0" max="1" value="0">
                 </div>
                 <div class="row centerrow">
-                    <button type="button" class="startbutton">Start Game</button>
+                    <button class="startbutton">Start Game</button>
                 </div>
             </form>
         </div>
