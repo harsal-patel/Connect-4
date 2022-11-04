@@ -87,12 +87,12 @@ function reprintBoard() {
     for (let i = 0; i < matrix.length; i++) {
         for (let j = 0; j < matrix[i].length; j++) {
             if (matrix[i][j] == 1) {
-                slots[(i*matrix[i].length)+j].classList.add("yellow");
-                slots[(i*matrix[i].length)+j].classList.remove("red");
+                slots[(i*matrix[i].length)+j].classList.add("player1");
+                slots[(i*matrix[i].length)+j].classList.remove("player2");
             }
             if (matrix[i][j] == 2) {
-                slots[(i*matrix[i].length)+j].classList.add("red");
-                slots[(i*matrix[i].length)+j].classList.remove("yellow");
+                slots[(i*matrix[i].length)+j].classList.add("player2");
+                slots[(i*matrix[i].length)+j].classList.remove("player1");
             }
         }
     }
@@ -101,6 +101,17 @@ function reprintBoard() {
 // check if piece can be placed in column
 function canPlacePiece(col) {
     return (matrix[0][col] == 0);
+}
+
+// if possible, drop a piece into selected column
+function placePiece(player, col) {
+    if (canPlacePiece(col)) {
+        let row = matrix.length - 1;
+        while (matrix[row][col] != 0) {
+            row--;
+        }
+        matrix[row][col] = player;
+    }
 }
 
 // check how many in a row downwards
@@ -173,6 +184,14 @@ function checkRtoL(i, j, player) {
         i_r--;
         j_r++;
     }
+}
+
+// check if no more pieces can be placed on board
+function isDraw() {
+    for (let j = 0; j < matrix[0].length; j++) {
+        if (canPlacePiece(j)) return false;
+    }
+    return true;
 }
 
 function testBoard() {

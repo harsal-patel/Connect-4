@@ -41,12 +41,12 @@ body {
     background-color: white;
 }
 
-.red {
-    background-color: #CF1B31;
+.player1 {
+    background-color: #FFCA32;
 }
 
-.yellow {
-    background-color: #FFCA32;
+.player2 {
+    background-color: #CF1B31;
 }
 
 .top {
