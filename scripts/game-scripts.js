@@ -1,4 +1,5 @@
 let matrix; // matrix representing game board
+let player = 1; // start as player 1
 
 function generateBoard(n, m) {
     // create 2d array and fill with 0's
@@ -22,6 +23,8 @@ function generateBoard(n, m) {
         }
         let dropSlot = document.createElement("div");
         dropSlot.classList.add("empty-slot");
+        dropSlot.setAttribute("data-value", i);
+        dropSlot.setAttribute("onclick", "placePiece(this.getAttribute('data-value'))")
         dropCol.appendChild(dropSlot);
         firstRow.appendChild(dropCol);
     }
@@ -104,13 +107,20 @@ function canPlacePiece(col) {
 }
 
 // if possible, drop a piece into selected column
-function placePiece(player, col) {
-    if (canPlacePiece(col)) {
-        let row = matrix.length - 1;
-        while (matrix[row][col] != 0) {
-            row--;
+function placePiece(col) {
+    let j = parseInt(col);
+    if (canPlacePiece(j)) {
+        let i = matrix.length - 1;
+        while (matrix[i][j] != 0) {
+            i--;
         }
-        matrix[row][col] = player;
+        matrix[i][j] = player;
+        console.log(`Piece dropped in column ${j}`);
+        player = (player == 1) ? 2 : 1;
+        reprintBoard();
+    }
+    else {
+        alert("Column is full");
     }
 }
 
@@ -214,4 +224,8 @@ function testBoard() {
         }
     }
     reprintBoard();
+}
+
+function start() {
+    generateBoard(6,7);
 }

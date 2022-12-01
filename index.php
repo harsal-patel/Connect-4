@@ -1,3 +1,12 @@
+<?php
+session_start();
+
+    include('connection.php');
+    include('functions.php');
+
+    $user_data = check_login($con);
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -36,7 +45,7 @@
     </div>
     <div class="outer-container">
         <div class="form-container">
-            <form method="post" action="server/processLogin.php">
+            <form method="post" action="processLogin.php">
                 <div class="row centerrow">
                     <h1><span class="title1">Connect</span><span class="title2">4</span></h1>
                 </div>
@@ -49,7 +58,7 @@
                     <input type="password" name="password" id="password">
                 </div>
                 <div class="row centerrow">
-                    <a href="AccountCreation.html">Create An Account</a>
+                    <a href="createaccount.php">Create An Account</a>
                 </div>
                 <div class="row centerrow">
                     <fieldset class="boardsize">
@@ -79,11 +88,13 @@
                     <input type="range" name="powers" id="powers" min="0" max="1" value="0">
                 </div>
                 <div class="row centerrow">
-                    <button class="startbutton">Start Game</button>
+                    <button class="startbutton" onclick="saveSettings()">Start Game</button>
                 </div>
             </form>
         </div>
     </div>
+
+    <script src="scripts/main-scripts.js"></script>
 </body>
 
 </html>
