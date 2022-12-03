@@ -48,6 +48,10 @@ svg:hover {
     color: #FFCA32;
 }
 
+.person:hover {
+    color: #1D63F4;
+}
+
 .github:hover {
     color: black;
 }

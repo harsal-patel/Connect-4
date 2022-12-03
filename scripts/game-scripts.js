@@ -1,5 +1,45 @@
+class Player {
+    constructor() {
+        this.color = "";
+        this.usedPower = false;
+        this.threes = 0;
+    }
+    get Color() {
+        return this.color;
+    }
+    get UsedPower() {
+        return this.usedPower;
+    }
+    get Threes() {
+        return this.threes;
+    }
+    setColor(color) {
+        this.color = color;
+    }
+    setPower() {
+        this.usedPower = true;
+    }
+    setThrees(n) {
+        this.threes = n;
+    }
+    incrementThrees(n) {
+        this.threes += n;
+    }
+}
+
 let matrix; // matrix representing game board
 let player = 1; // start as player 1
+let gameWon = false; // game starts as not won
+
+// declare settings
+let boardsize;
+let boardcolor;
+let hints;
+let powers;
+
+// create player 1 and player 2
+let p1 = new Player();
+let p2 = new Player();
 
 function generateBoard(n, m) {
     // create 2d array and fill with 0's
@@ -82,6 +122,10 @@ function flipMatrix() {
         }
     }
     reprintBoard();
+    (player == 1) ? p1.setPower() : p2.setPower();
+    document.getElementById("powerbtn").disabled = true;
+    p1.setThrees(recountThrees(1));
+    p2.setThrees(recountThrees(2));
 }
 
 // update board to reflect changes to matrix
@@ -99,6 +143,14 @@ function reprintBoard() {
             }
         }
     }
+    let p1s = document.querySelectorAll(".player1");
+    for (p of p1s) {
+        p.style.backgroundColor = p1.Color;
+    }
+    let p2s = document.querySelectorAll(".player2");
+    for (p of p2s) {
+        p.style.backgroundColor = p2.Color;
+    }
 }
 
 // check if piece can be placed in column
@@ -115,9 +167,28 @@ function placePiece(col) {
             i--;
         }
         matrix[i][j] = player;
-        console.log(`Piece dropped in column ${j}`);
+        // check if winner
+        if (checkHorizontal(i, j, player) >= 4 || checkVertical(i, j, player) >= 4 || checkLtoR(i, j, player) >= 4 || checkRtoL(i, j, player) >= 4) {
+            console.log(`Player ${player} wins!`);
+        }
+        // increment number of threes
+        let tempThrees = 0;
+        if (checkHorizontal(i, j, player) == 3) tempThrees++;
+        if (checkVertical(i, j, player) == 3) tempThrees++;
+        if (checkLtoR(i, j, player) == 3) tempThrees++;
+        if (checkRtoL(i, j, player) == 3) tempThrees++;
+        (player == 1) ? p1.incrementThrees(tempThrees) : p2.incrementThrees(tempThrees);
+
         player = (player == 1) ? 2 : 1;
         reprintBoard();
+        if (powers == '1') {
+            if (player == 1) {
+                (p1.UsedPower == false) ? document.getElementById("powerbtn").disabled = false : document.getElementById("powerbtn").disabled = true;
+            }
+            else {
+                (p2.UsedPower == false) ? document.getElementById("powerbtn").disabled = false : document.getElementById("powerbtn").disabled = true;
+            }
+        }
     }
     else {
         alert("Column is full");
@@ -204,28 +275,47 @@ function isDraw() {
     return true;
 }
 
-function testBoard() {
-    generateBoard(6,7);
+// function to recount threes after flipping board
+function recountThrees(player) {
+    sum = 0;
+    tempsum = 0;
     for (let i = 0; i < matrix.length; i++) {
         for (let j = 0; j < matrix[i].length; j++) {
-            matrix[i][j] = Math.floor(Math.random() * 3);
-        }
-    }
-    for (let j = 0; j < matrix[0].length; j++) {
-        for (let i = matrix.length - 1; i > 0; i--) {
-            if (matrix[i][j] == 0 && matrix[i-1][j] != 0) {
-                let index = i;
-                while (index < matrix.length && matrix[index][j] == 0 && matrix[index-1][j] != 0) {
-                    matrix[index][j] = matrix[index-1][j];
-                    matrix[index-1][j] = 0;
-                    index++;
-                }
+            if (matrix[i][j] == player) {
+                if (checkHorizontal(i, j, player) == 3) tempsum++;
+                if (checkVertical(i, j, player) == 3) sum++;
+                if (checkLtoR(i, j, player) == 3) tempsum++;
+                if (checkRtoL(i, j, player) == 3) tempsum++;
             }
         }
     }
-    reprintBoard();
+    // account for redundant counting
+    tempsum /= 3;
+
+    sum += tempsum;
+    return sum;
 }
 
 function start() {
-    generateBoard(6,7);
+    boardsize = sessionStorage.getItem("boardsize");
+    boardcolor = sessionStorage.getItem("boardcolor");
+    let p1color = sessionStorage.getItem("p1color");
+    let p2color = sessionStorage.getItem("p2color");
+    hints = sessionStorage.getItem("hints");
+    powers = sessionStorage.getItem("powers");
+
+    // generate game board
+    if (boardsize == "normal") {
+        generateBoard(6,7);
+    }
+    else {
+        generateBoard(8,9);
+    }
+
+    p1.setColor(p1color);
+    p2.setColor(p2color);
+
+    if (powers == '0') {
+        document.getElementById("powerbtn").disabled = true;
+    }
 }

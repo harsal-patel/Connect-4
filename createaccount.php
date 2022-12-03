@@ -11,15 +11,26 @@ session_start();
 
 		if (!empty($username) && !empty($password)) {
 
-			$query = "insert into users (username,password) values ('$username','$password')";
+			$query = "SELECT * FROM users WHERE username = '$username' LIMIT 1";
 
-			mysqli_query($con, $query);
+			$result = mysqli_query($con, $query);
 
-			header("Location: index.php");
-			die;
+            if ($result) {
+                if (mysqli_num_rows($result) > 0) {
+                    echo '<script>alert("Username already exists!")</script>';
+                }
+				else {
+					$query = "insert into users (username,password) values ('$username','$password')";
+
+					mysqli_query($con, $query);
+					
+					header("Location: index.php");
+					die;
+				}
+            }
 		}
 		else {
-			echo "Please enter some valid information!";
+			echo '<script>alert("Please enter a username and a password")</script>';
 		}
 	}
 ?>
