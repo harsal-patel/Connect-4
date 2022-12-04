@@ -20,7 +20,7 @@ session_start();
                     echo '<script>alert("Username already exists!")</script>';
                 }
 				else {
-					$query = "insert into users (username,password) values ('$username','$password')";
+					$query = "INSERT INTO users (username,password) VALUES ('$username','$password')";
 
 					mysqli_query($con, $query);
 					

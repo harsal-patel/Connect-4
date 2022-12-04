@@ -41,6 +41,18 @@ let powers;
 let p1 = new Player();
 let p2 = new Player();
 
+// show time
+let timer = setInterval(showTime, 1000);
+let seconds = 0;
+
+// function to show time
+function showTime() {
+    if (!gameWon) {
+        seconds++;
+        document.getElementById("timer").innerHTML = seconds;
+    }
+}
+
 function generateBoard(n, m) {
     // create 2d array and fill with 0's
     matrix = new Array(n);
@@ -111,11 +123,11 @@ function flipMatrix() {
     // make all pieces move down into empty slots if need be
     for (let j = 0; j < matrix[0].length; j++) {
         for (let i = matrix.length - 1; i > 0; i--) {
-            if (matrix[i][j] == 0 && matrix[i-1][j] != 0) {
+            if (matrix[i][j] == 0 && matrix[i - 1][j] != 0) {
                 let index = i;
-                while (index < matrix.length && matrix[index][j] == 0 && matrix[index-1][j] != 0) {
-                    matrix[index][j] = matrix[index-1][j];
-                    matrix[index-1][j] = 0;
+                while (index < matrix.length && matrix[index][j] == 0 && matrix[index - 1][j] != 0) {
+                    matrix[index][j] = matrix[index - 1][j];
+                    matrix[index - 1][j] = 0;
                     index++;
                 }
             }
@@ -126,6 +138,8 @@ function flipMatrix() {
     document.getElementById("powerbtn").disabled = true;
     p1.setThrees(recountThrees(1));
     p2.setThrees(recountThrees(2));
+    document.getElementById("p1threes").innerHTML = p1.Threes;
+    document.getElementById("p2threes").innerHTML = p2.Threes;
 }
 
 // update board to reflect changes to matrix
@@ -134,14 +148,19 @@ function reprintBoard() {
     for (let i = 0; i < matrix.length; i++) {
         for (let j = 0; j < matrix[i].length; j++) {
             if (matrix[i][j] == 1) {
-                slots[(i*matrix[i].length)+j].classList.add("player1");
-                slots[(i*matrix[i].length)+j].classList.remove("player2");
+                slots[(i * matrix[i].length) + j].classList.add("player1");
+                slots[(i * matrix[i].length) + j].classList.remove("player2");
             }
             if (matrix[i][j] == 2) {
-                slots[(i*matrix[i].length)+j].classList.add("player2");
-                slots[(i*matrix[i].length)+j].classList.remove("player1");
+                slots[(i * matrix[i].length) + j].classList.add("player2");
+                slots[(i * matrix[i].length) + j].classList.remove("player1");
             }
         }
+    }
+    let cols = document.querySelectorAll(".board-col");
+    for (col of cols) {
+        col.style.backgroundColor = boardcolor;
+        col.style.borderColor = boardcolor;
     }
     let p1s = document.querySelectorAll(".player1");
     for (p of p1s) {
@@ -150,6 +169,95 @@ function reprintBoard() {
     let p2s = document.querySelectorAll(".player2");
     for (p of p2s) {
         p.style.backgroundColor = p2.Color;
+    }
+    
+    if (hints == '1') {
+        let slots = document.querySelectorAll(".slot");
+        for (slot of slots) {
+            slot.classList.remove("hint");
+        }
+        applyHints(player);
+    }
+}
+
+function applyHints(player) {
+    for (let i = 0; i < matrix.length; i++) {
+        for (let j = 0; j < matrix[i].length; j++) {
+            if (matrix[i][j] == 0) checkAround(i, j, player);
+        }
+    }
+}
+
+function checkAround(i, j, player) {
+    let counter = 0;
+    let slots = document.querySelectorAll(".slot");
+    let i1, i_l, i_r, j_l, j_r;
+
+    // check vertical
+    i1 = i + 1;
+    while (i1 < matrix.length && matrix[i1][j] == player) {
+        counter++;
+        i1++;
+    }
+    if (counter >= 3) {
+        slots[(i * matrix[i].length) + j].classList.add("hint");
+    }
+
+    // check horizontal
+    counter = 0;
+    j_l = j - 1;
+    j_r = j + 1;
+    while (j_l >= 0 && matrix[i][j_l] == player) {
+        counter++;
+        j_l--;
+    }
+    while (j_r < matrix[i].length && matrix[i][j_r] == player) {
+        counter++;
+        j_r++;
+    }
+    if (counter >= 3) {
+        slots[(i * matrix[i].length) + j].classList.add("hint");
+    }
+
+    // check down left to up right
+    counter = 0;
+    i_l = i + 1;
+    j_l = j - 1;
+    while (i_l < matrix.length && j_l >= 0 && matrix[i_l][j_l] == player) {
+        counter++;
+        i_l++;
+        j_l--;
+    }
+
+    i_r = i - 1;
+    j_r = j + 1;
+    while (i_r >= 0 && j_r < matrix[i].length && matrix[i_r][j_r] == player) {
+        counter++;
+        i_r--;
+        j_r++;
+    }
+    if (counter >= 3) {
+        slots[(i * matrix[i].length) + j].classList.add("hint");
+    }
+
+    // check up left to down right
+    counter = 0;
+    i_l = i - 1;
+    j_l = j - 1;
+    while (i_l >= 0 && j_l >= 0 && matrix[i_l][j_l] == player) {
+        counter++;
+        i_l--;
+        j_l--;
+    }
+    i_r = i + 1;
+    j_r = j + 1;
+    while (i_r < matrix.length && j < matrix[i].length && matrix[i_r][j_r] == player) {
+        counter++;
+        i_r++;
+        j_r++;
+    }
+    if (counter >= 3) {
+        slots[(i * matrix[i].length) + j].classList.add("hint");
     }
 }
 
@@ -169,17 +277,46 @@ function placePiece(col) {
         matrix[i][j] = player;
         // check if winner
         if (checkHorizontal(i, j, player) >= 4 || checkVertical(i, j, player) >= 4 || checkLtoR(i, j, player) >= 4 || checkRtoL(i, j, player) >= 4) {
-            console.log(`Player ${player} wins!`);
+            gameWon = true;
+            document.getElementById("player").innerHTML = `Player ${player} wins!`;
+            let slots = document.querySelectorAll(".empty-slot");
+            for (slot of slots) {
+                slot.onclick = null;
+            }
+            let win = (player == 1) ? 1 : -1;
+            sendData(sessionStorage.getItem("username"), seconds, win);
         }
+        else if (isDraw()) {
+            gameWon = true;
+            document.getElementById("player").innerHTML = "Tied game!";
+            let slots = document.querySelectorAll(".empty-slot");
+            for (slot of slots) {
+                slot.onclick = null;
+            }
+            sendData(sessionStorage.getItem("username"), seconds, 0);
+        }
+
         // increment number of threes
         let tempThrees = 0;
         if (checkHorizontal(i, j, player) == 3) tempThrees++;
         if (checkVertical(i, j, player) == 3) tempThrees++;
         if (checkLtoR(i, j, player) == 3) tempThrees++;
         if (checkRtoL(i, j, player) == 3) tempThrees++;
-        (player == 1) ? p1.incrementThrees(tempThrees) : p2.incrementThrees(tempThrees);
+        if (player == 1) {
+            p1.incrementThrees(tempThrees);
+            document.getElementById("p1threes").innerHTML = p1.Threes;
+        }
+        else {
+            p2.incrementThrees(tempThrees);
+            document.getElementById("p2threes").innerHTML = p2.Threes;
+        }
 
-        player = (player == 1) ? 2 : 1;
+        // switch players
+        if (!gameWon) {
+            player = (player == 1) ? 2 : 1;
+            document.getElementById("player").innerHTML = `Player ${player}'s turn`;
+        }
+
         reprintBoard();
         if (powers == '1') {
             if (player == 1) {
@@ -260,11 +397,12 @@ function checkRtoL(i, j, player) {
     let i_r = i - 1;
     let j_r = j + 1;
     // check going up and right
-    while(i_r >= 0 && j_r < matrix[i].length && matrix[i_r][j_r] == player) {
-        counter = 0;
+    while (i_r >= 0 && j_r < matrix[i].length && matrix[i_r][j_r] == player) {
+        counter++;
         i_r--;
         j_r++;
     }
+    return counter;
 }
 
 // check if no more pieces can be placed on board
@@ -296,6 +434,28 @@ function recountThrees(player) {
     return sum;
 }
 
+function sendData(username, time, win) {
+    let arr = new Array;
+    arr[0] = username;
+    arr[1] = time;
+    arr[2] = win;
+    console.log(arr);
+    strArr = JSON.stringify(arr);
+
+    httpRequest = new XMLHttpRequest(); // create the object
+    if (!httpRequest) { // check if the object was properly created
+        // issues with the browser, example: old browser
+        alert('Cannot create an XMLHTTP instance');
+        return false;
+    }
+
+    httpRequest.open('POST', 'updateDB.php');  // ACTION + (string containing address of the file + parameters if needed)
+    httpRequest.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+    // application/json; charset=utf-8 is a common Content-Type
+    // application/x-www-form-urlencoded; charset=UTF-8 is the default Content-Type
+    httpRequest.send('Array=' + strArr); // POST = send with parameter (the string with the relevant information)
+}
+
 function start() {
     boardsize = sessionStorage.getItem("boardsize");
     boardcolor = sessionStorage.getItem("boardcolor");
@@ -306,10 +466,16 @@ function start() {
 
     // generate game board
     if (boardsize == "normal") {
-        generateBoard(6,7);
+        generateBoard(6, 7);
     }
     else {
-        generateBoard(8,9);
+        generateBoard(8, 9);
+    }
+
+    let cols = document.querySelectorAll(".board-col");
+    for (col of cols) {
+        col.style.backgroundColor = boardcolor;
+        col.style.borderColor = boardcolor;
     }
 
     p1.setColor(p1color);
