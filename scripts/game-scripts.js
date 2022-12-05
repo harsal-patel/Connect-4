@@ -289,6 +289,7 @@ function placePiece(col) {
         if (checkHorizontal(i, j, player) >= 4 || checkVertical(i, j, player) >= 4 || checkLtoR(i, j, player) >= 4 || checkRtoL(i, j, player) >= 4) {
             gameWon = true;
             document.getElementById("player").innerHTML = `Player ${player} wins!`;
+            document.getElementById("player").style.color = (player == 1) ? p1.Color : p2.Color;
             let slots = document.querySelectorAll(".empty-slot");
             for (slot of slots) {
                 slot.onclick = null;

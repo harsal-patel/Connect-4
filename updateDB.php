@@ -1,8 +1,8 @@
 <?php 
 session_start();
 
-include("connection.php");
-include("functions.php");
+include("server/connection.php");
+include("server/functions.php");
 
     // receive array
     if (isset($_POST['Array'])) {
@@ -12,8 +12,9 @@ include("functions.php");
 
     $username = $arr[0];
     $time = $arr[1];
-    $win = ($arr[2] == 1) ? 1 : 0;
+    $win = $arr[2];
     $loss = ($win == -1) ? 1 : 0;
+    $win = ($arr[2] == 1) ? 1 : 0;
     $totalgames = 1;
 
     $query = "SELECT * FROM users WHERE username = '$username' LIMIT 1";

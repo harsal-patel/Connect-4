@@ -21,17 +21,17 @@ session_start();
 
                     if ($userdata['password'] === $password) {
                         $_SESSION['username'] = $userdata['username'];
-                        header("Location: game.html");
+                        header("Location: ../game.html");
 			            die;
                     }
 					
                 }
             }
-            header("Location: error.html");
+            header("Location: ../error.html");
 			die;
 		}
 		else {
-			header("Location: error.html");
+			header("Location: ../error.html");
 			die;
 		}
 	}
