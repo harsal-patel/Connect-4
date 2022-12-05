@@ -1,0 +1,100 @@
+body {
+    margin: 0;
+    padding: 0;
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 400;
+    background-color: #0c1d3d;
+}
+
+.outer-container {
+    display: flex;
+    justify-content: center;
+}
+
+.inner-container {
+    margin: 2rem;
+    border-radius: 1rem;
+    border: 1px solid black;
+    background-color: antiquewhite;
+    width: 90%;
+}
+
+h1 {
+    letter-spacing: 0.25rem;
+    margin-bottom: 0;
+    font-weight: 400;
+    font-size: 2.5rem;
+}
+
+h2 {
+    letter-spacing: 0.35rem;
+    font-weight: 400;
+    font-size: 1.75rem;
+    margin-top: 0.1rem;
+}
+
+h3 {
+    letter-spacing: 0.05rem;
+    font-weight: 400;
+    font-size: 0.8rem;
+    margin-bottom: 0;
+}
+
+.goback {
+    margin-top: 0.5rem;
+    margin-bottom: 1rem;
+    border: 1px solid #551A8B;
+    border-radius: 0.25rem;
+    text-decoration: none;
+    padding: 0.5rem;
+    color: #551A8B;
+    transition: all 0.1s ease-in-out;
+}
+
+.goback:hover {
+    background-color: #551A8B;
+    color: white;
+}
+
+.container {
+    display: flex;
+    justify-content: center;
+}
+
+table {
+    border-collapse: collapse;
+    width: 100%;
+}
+
+.page {
+    padding: 2rem;
+    border-top: 2px solid black;
+    vertical-align: top;
+}
+
+.p1 {
+    width: 40%;
+}
+
+.p2 {
+    width: 60%;
+}
+
+.page:nth-of-type(2n) {
+    border-left: 1px solid black;
+}
+
+.profile {
+    width: 65%;
+    border: 3px solid black;
+}
+
+.contact {
+    margin-top: 2rem;
+    display: flex;
+    align-items: center;
+}
+
+.contact-link {
+    margin-left: 1rem;
+}

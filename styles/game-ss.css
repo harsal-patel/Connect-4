@@ -15,6 +15,10 @@ body {
     border-bottom: 2px solid black;
 }
 
+.buttons {
+    margin-top: 0.5rem;
+}
+
 .goback {
     border: 1px solid #551A8B;
     border-radius: 0.25rem;
@@ -27,6 +31,10 @@ body {
 .goback:hover {
     background-color: #551A8B;
     color: white;
+}
+
+.restart {
+    margin-left: 0.5rem;
 }
 
 .threecounter {

@@ -64,6 +64,7 @@ function generateBoard(n, m) {
     // create first row of empty slots (where player will drop pieces)
     let table = document.getElementById("board");
     let firstRow = document.createElement("tr");
+    firstRow.classList.add("top-row");
     for (let i = 0; i < m; i++) {
         let dropCol = document.createElement("td");
         dropCol.classList.add("empty-col");
@@ -183,7 +184,16 @@ function reprintBoard() {
 function applyHints(player) {
     for (let i = 0; i < matrix.length; i++) {
         for (let j = 0; j < matrix[i].length; j++) {
-            if (matrix[i][j] == 0) checkAround(i, j, player);
+            if (matrix[i][j] == 0) {
+                if (i + 1 < matrix.length) {
+                    if (matrix[i+1][j] != 0) {
+                        checkAround(i, j, player);
+                    }
+                }
+                else {
+                    checkAround(i, j, player);
+                }
+            }
         }
     }
 }
