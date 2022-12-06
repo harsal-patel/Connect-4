@@ -24,8 +24,7 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
 
 					mysqli_query($con, $query);
 
-					header("Location: index.html");
-					die;
+					echo '<script>alert("Account creation successful!");window.location.href="index.html";</script>';
 				}
 			}
 		}
